@@ -7,3 +7,4 @@ requests
 colorama
 webrtcvad
 langdetect
+python-dotenv

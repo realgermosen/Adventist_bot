@@ -38,6 +38,8 @@ pip install -r requirements.txt
     ELEVEN_LABS_VOICE_ID=your_voice_id_here
     ```
 
+    Otherwise, select a voice id from [Eleven Labs Voices](https://api.elevenlabs.io/v1/voices)
+
 ## Usage
 To run the bot, execute:
 ```bash

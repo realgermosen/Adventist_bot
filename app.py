@@ -48,7 +48,7 @@ def open_file(filepath):
         return infile.read()
 
 def chatgpt(api_key, conversation, chatbot, user_input, temperature=1.2, frequency_penalty=0, presence_penalty=0, stream=True):
-    openai.api_key = api_key
+    # openai.api_key = api_key
     prompt = [{"role": "system", "content": chatbot}]
     
     conversation.append({"role": "user","content": user_input})

@@ -16,29 +16,55 @@ pip install -r requirements.txt
 ```
 
 ## Setup
-1. Clone the repository:
+
+1. **Clone the Repository:**
     ```bash
     git clone https://github.com/realgermosen/Adventist_bot.git
     ```
-2. Navigate to the `Adventist_bot` directory:
+
+2. **Navigate to the Directory:**
     ```bash
     cd Adventist_bot
     ```
-3. Install dependencies:
+
+3. **Install Dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
-4. Setup your `.env` file with your OpenAI API key:
-    ```
-    OPENAI_API_KEY=your_openai_api_key_here
-    ```
-5. If you're using a custom voice from Eleven Labs, update the voice ID in the `.env` file:
-    ```
-    ELEVEN_LABS_API_KEY=your_eleven_labs_api_key_here
-    ELEVEN_LABS_VOICE_ID=your_voice_id_here
+
+4. **Create `.env` File:**
+    Create a new file in the root directory and name it `.env`. This file will store your API keys.
+    ```bash
+    touch .env
     ```
 
-    Otherwise, select a voice id from [Eleven Labs Voices](https://api.elevenlabs.io/v1/voices)
+    - **OpenAI API Key:**
+      You can find your Secret API key in your [OpenAI User Settings](https://beta.openai.com/account/api-keys).
+      ```bash
+      echo "OPENAI_API_KEY=your_openai_api_key_here" >> .env
+      ```
+
+    - **Eleven Labs API Key:**
+      Follow the steps explained in the [Eleven Labs Authentication Docs](https://docs.elevenlabs.io/api-reference/quick-start/authentication).
+      ```bash
+      echo "ELEVEN_LABS_API_KEY=your_eleven_labs_api_key_here" >> .env
+      ```
+
+    - **Eleven Labs Voice ID:**
+      You can either select a voice ID from [Eleven Labs Voices](https://api.elevenlabs.io/v1/voices) or use the pre-made voice called Michael.
+      ```bash
+      echo "ELEVEN_LABS_VOICE_ID=flq6f7yk4E4fJM5XTYuZ" >> .env  # For Michael's voice
+      ```
+
+    > Note: Make sure your `.env` file is actually named `.env` and not `.env.txt`.
+
+5. **Run the Application:**
+    ```bash
+    python app.py
+    ```
+
+That's it! You should now have everything set up.
+
 
 ## Usage
 To run the bot, execute:

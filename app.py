@@ -24,7 +24,7 @@ load_dotenv()
 
 ELEVEN_LABS_API_KEY = os.getenv('ELEVEN_LABS_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-ELEVEN_LABS_VOICE_ID = os.getenv('ELEVEN_LABS_VOICE_ID')
+ELEVEN_LABS_VOICE_ID = os.getenv('ELEVEN_LABS_VOICE_ID') or "flq6f7yk4E4fJM5XTYuZ"
 
 init()
 

@@ -47,8 +47,8 @@ def open_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as infile:
         return infile.read()
 
-def chatgpt(api_key, conversation, chatbot, user_input, temperature=1.2, frequency_penalty=0, presence_penalty=0, stream=True):
-    # openai.api_key = api_key
+def chatgpt(conversation, chatbot, user_input, temperature=1.2, frequency_penalty=0, presence_penalty=0, stream=True):
+
     prompt = [{"role": "system", "content": chatbot}]
     
     conversation.append({"role": "user","content": user_input})
@@ -308,7 +308,7 @@ while True:
     # user_message = "Hi, what is your name? Be concise."
     print(user_message)
     try:
-        response, chat_history = chatgpt(OPENAI_API_KEY, chat_history, chatbot, user_message, stream=True)
+        response, chat_history = chatgpt(chat_history, chatbot, user_message, stream=True)
  
         sentences = response.split('.')
 

@@ -24,6 +24,7 @@ load_dotenv()
 
 ELEVEN_LABS_API_KEY = os.getenv('ELEVEN_LABS_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+ELEVEN_LABS_VOICE_ID = os.getenv('ELEVEN_LABS_VOICE_ID')
 
 init()
 
@@ -33,7 +34,6 @@ global voiced_frames
 recording = False
 voiced_frames = []
 audio_queue = Queue() # This is the queue where we'll store the audio data to be played
-voice_id = '6dT4oTmcgaYHg4tmJN5z'
 
 # Create a buffer to hold several chunks
 ring_buffer = collections.deque(maxlen=30) # This buffer will hold last 200 chunks
@@ -314,7 +314,7 @@ while True:
 
         user_message_without_generate_image = re.sub(r'(Response:|Narration:|Image: generate_image:.*|)', '', response).strip()
 
-        text_to_speech_multiple_paragraphs(user_message_without_generate_image, voice_id, ELEVEN_LABS_API_KEY)
+        text_to_speech_multiple_paragraphs(user_message_without_generate_image, ELEVEN_LABS_VOICE_ID, ELEVEN_LABS_API_KEY)
 
         input("Press any key to continue...")
         

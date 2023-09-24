@@ -1,0 +1,9 @@
+sounddevice
+soundfile
+pydub
+numpy
+openai
+requests
+colorama
+webrtcvad
+langdetect

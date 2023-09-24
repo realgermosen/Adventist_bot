@@ -43,11 +43,28 @@ vad = webrtcvad.Vad(3)  # Set aggressiveness from 0 to 3
 
 chat_history = []  
 
+# Reads a text file and returns its content as a string.
 def open_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as infile:
         return infile.read()
 
+# Sends a message to the GPT-3.5 Turbo model and returns the generated response.
 def chatgpt(conversation, chatbot, user_input, temperature=1.2, frequency_penalty=0, presence_penalty=0, stream=True):
+    """
+    Sends a message to the GPT-3.5 Turbo model and returns the generated response.
+    
+    Parameters:
+        conversation (list): A list of previous conversation turns.
+        chatbot (str): The text defining the chatbot persona.
+        user_input (str): The message from the user.
+        temperature (float, optional): Controls randomness in responses. Defaults to 1.2.
+        frequency_penalty (float, optional): Controls frequency of token usage. Defaults to 0.
+        presence_penalty (float, optional): Controls the presence of tokens in output. Defaults to 0.
+        stream (bool, optional): Whether to stream the result. Defaults to True.
+
+    Returns:
+        str, list: The generated message and updated conversation history.
+    """
 
     prompt = [{"role": "system", "content": chatbot}]
     
@@ -87,22 +104,48 @@ def chatgpt(conversation, chatbot, user_input, temperature=1.2, frequency_penalt
 
     return full_reply_content, conversation
 
-# Working play_audio function
+# Plays audio data with a specified sample rate.
 def play_audio(audio_data, sample_rate):
+    """
+    Plays audio data with a specified sample rate.
+
+    Parameters:
+        audio_data (numpy.ndarray): The audio data to play.
+        sample_rate (int): The sample rate of the audio data.
+
+    Returns:
+        None
+    """
+
     if audio_data.ndim > 1 and audio_data.shape[1] > 1:
         audio_data = audio_data.mean(axis=1)
     audio_data /= np.abs(audio_data).max() if np.abs(audio_data).max() > 0 else 1
     sd.play(audio_data, sample_rate)
     sd.wait()
 
+# Detects the language of the given text string.
 def detect_language(text):
     try:
         return detect(text)
     except:
         return 'en'  # Default to English if detection fails
 
-# Working text_to_speech function
+# Converts text to speech using Eleven Labs API.
 def text_to_speech(text, voice_id, api_key, audio_queue, semaphore):
+    """
+    Converts text to speech using the Eleven Labs API.
+
+    Parameters:
+        text (str): The text to convert to speech.
+        voice_id (str): The ID of the voice to use.
+        api_key (str): The API key for Eleven Labs.
+        audio_queue (Queue): The queue to put the audio data in.
+        semaphore (threading.Semaphore): A semaphore to control concurrent execution.
+
+    Returns:
+        None
+    """
+
     language = detect_language(text)
     model_id = get_voice_and_model_for_language(language)
 
@@ -137,6 +180,7 @@ def text_to_speech(text, voice_id, api_key, audio_queue, semaphore):
     else:
         print('Error:', response.text)
 
+# Returns the appropriate voice and model IDs for a given language.
 def get_voice_and_model_for_language(language):
     # This function should return a voice ID and model ID for the given language.
     # You'll need to fill in the details based on what voices and models are available.
@@ -148,8 +192,20 @@ def get_voice_and_model_for_language(language):
     else:
         return 'eleven_monolingual_v1'
 
-# This function is working and split text in paragraphs. 
+# Splits text into paragraphs and converts each to speech.
 def text_to_speech_multiple_paragraphs(text, voice_id, api_key):
+    """
+    Splits text into paragraphs and converts each to speech.
+
+    Parameters:
+        text (str): The text to convert to speech.
+        voice_id (str): The ID of the voice to use.
+        api_key (str): The API key for Eleven Labs.
+
+    Returns:
+        None
+    """
+
     # Split the text into sentences
     sentences = re.split('(?<=\.) +', text) #text.split('\n\n')
 
@@ -187,7 +243,18 @@ def text_to_speech_multiple_paragraphs(text, voice_id, api_key):
             future = futures_queue.get()
             future.result()
 
+# Fetches and displays the user's subscription info from the Eleven Labs API.
 def get_user_subs_info(api_key):
+    """
+    Fetches and displays the user's subscription info from the Eleven Labs API.
+
+    Parameters:
+        api_key (str): The API key for Eleven Labs.
+
+    Returns:
+        str: The first two characters of the API key.
+    """
+    
     url = f'https://api.elevenlabs.io/v1/user/subscription'
     headers = {
     'Accept': 'application/json',
@@ -206,6 +273,7 @@ def get_user_subs_info(api_key):
         print("API call failed with status code:\n", response)
     return api_key[0:2]
 
+# Prints colored text in the console.
 def print_colored(agent, text):
     agent_colors = {
         "Sara": Fore.YELLOW,
@@ -217,7 +285,18 @@ def print_colored(agent, text):
     sys.stdout.write(color + f"{text}" + Style.RESET_ALL)
     sys.stdout.flush()
 
+# Records audio and transcribes it using VAD (Voice Activity Detection).
 def record_and_transcribe_vad(fs=44100):
+    """
+    Records audio and transcribes it using VAD (Voice Activity Detection).
+
+    Parameters:
+        fs (int, optional): The sample rate for recording audio. Defaults to 44100.
+
+    Returns:
+        str: The transcribed text.
+    """
+
     global recording
     global voiced_frames
 
@@ -285,6 +364,7 @@ def record_and_transcribe_vad(fs=44100):
     transcription = result['text']
     return transcription
 
+# Plays audio from a queue.
 def play_audio_from_queue():
     while True:
         # there's something in the queue
@@ -293,6 +373,7 @@ def play_audio_from_queue():
         # Let the queue know the task is done
         audio_queue.task_done()
 
+# Waits until all audio in the queue has been played.
 def wait_for_audio_to_finish():
     # Wait until the audio queue is empty
     audio_queue.join()

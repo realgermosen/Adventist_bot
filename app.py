@@ -384,24 +384,54 @@ chatbot = open_file(os.path.join('persona', 'Joshua.txt'))
 audio_thread = threading.Thread(target=play_audio_from_queue, daemon=True)
 audio_thread.start()
 
-while True:
-    user_message = record_and_transcribe_vad()
-    # user_message = "Hi, what is your name? Be concise."
-    print(user_message)
-    try:
-        response, chat_history = chatgpt(chat_history, chatbot, user_message, stream=True)
- 
-        sentences = response.split('.')
+import streamlit as st
 
-        user_message_without_generate_image = re.sub(r'(Response:|Narration:|Image: generate_image:.*|)', '', response).strip()
+def main():
+    st.title("Adventist Bot")
 
-        text_to_speech_multiple_paragraphs(user_message_without_generate_image, ELEVEN_LABS_VOICE_ID, ELEVEN_LABS_API_KEY)
+    st.sidebar.header("Settings")
+    # Example of using config values in Streamlit
+    st.sidebar.text(f"Voice ID: {ELEVEN_LABS_VOICE_ID}")
 
-        input("Press any key to continue...")
-        
-        # Wait until all audio has been played
-        wait_for_audio_to_finish()
-                    
-    except Exception as e:
-        print(f"Error: {e}")
-        input("Press any key to continue...")
+    user_input = st.text_input("Type your message:")
+    if st.button("Submit"):
+        try:
+            response_text, _ = chatgpt([], chatbot, user_input)  # Simplified for example
+            st.write(f"Bot: {response_text}")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+
+    audio_file = st.file_uploader("Upload Audio", type=["wav", "mp3"])
+    if audio_file is not None:
+        audio_data = audio_file.read()
+        st.audio(audio_data, format='audio/wav')
+
+    record_audio = st.button("Record Audio")
+    if record_audio:
+        # Placeholder for starting audio recording
+        st.write("Recording functionality not yet implemented")
+
+if __name__ == "__main__":
+    main()
+
+    # while True:
+    #     user_message = record_and_transcribe_vad()
+    #     # user_message = "Hi, what is your name? Be concise."
+    #     print(user_message)
+    #     try:
+    #         response, chat_history = chatgpt(chat_history, chatbot, user_message, stream=True)
+    
+    #         sentences = response.split('.')
+
+    #         user_message_without_generate_image = re.sub(r'(Response:|Narration:|Image: generate_image:.*|)', '', response).strip()
+
+    #         text_to_speech_multiple_paragraphs(user_message_without_generate_image, ELEVEN_LABS_VOICE_ID, ELEVEN_LABS_API_KEY)
+
+    #         input("Press any key to continue...")
+            
+    #         # Wait until all audio has been played
+    #         wait_for_audio_to_finish()
+                        
+    #     except Exception as e:
+    #         print(f"Error: {e}")
+    #         input("Press any key to continue...")
